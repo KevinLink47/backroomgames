@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后室杀</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card, .discarded-card {
+            border: 1px solid black;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            width: 200px;
+            height: 300px;
+            margin: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            color: black;
+        }
+
+        .card-enlarged {
+            transform: scale(1.2);
+        }
+
+        .card-name, .discarded-card-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card-description, .discarded-card-description {
+            font-size: 1.2em;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #008CBA;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="card-container">
+            <div 
+                class="card" 
+                v-for="(card, index) in cards" 
+                :key="card.name"
+                :class="{ 'card-enlarged': index === selectedCardIndex }"
+                @click="selectCard(index)"
+            >
+                <h2 class="card-name">{{ card.name }}</h2>
+                <p class="card-description">{{ card.description }}</p>
+            </div>
+        </div>
+        <div class="center-content">
+            <button @click="playCard">出牌</button>
+            <button @click="drawCard">摸牌</button>
+            <p>已选中的牌：{{ selectedCardIndex !== null ? cards[selectedCardIndex].name : '无' }}</p>
+            <p>{{ message }}</p>
+        </div>
+        <h2>弃牌堆：</h2>
+        <div class="card-container">
+            <div 
+                class="discarded-card" 
+                v-for="card in discardedCards.slice(-10)" 
+                :key="card.name"
+            >
+                <h2 class="discarded-card-name">{{ card.name }}</h2>
+                <p class="discarded-card-description">{{ card.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const App = {
+            data() {
+                return {
+                    selectedCardIndex: null,
+                    discardedCards: [],
+                    message: '',
+                    cards: [
+                        { name: "刀", description: "", enlarged: false },
+                        { name: "逃", description: "", enlarged: false },
+                        { name: "资源补给", description: "摸两张牌", enlarged: false },
+                        { name: "杏仁水", description: "", enlarged: false },
+                        { name: "皇家口粮", description: "", enlarged: false },
+                        { name: "死里逃生", description: "取消一张技能牌对一个人的效果", enlarged: false },
+                        { name: "扔资源", description: "弃置一个人的一张牌", enlarged: false },
+                        { name: "资源发放", description: "亮出牌堆顶与人数相同数量的牌，从你开始依次选择一张牌加入手牌", enlarged: false },
+                        { name: "快刀", description: "", enlarged: false },
+                        { name: "飞刀", description: "", enlarged: false },
+                        { name: "实体横行", description: "每名玩家打出一张“刀”，否则-1☢️", enlarged: false },
+                    ],
+                    deck: [],
+                    handSize: 4,
+                };
+            },
+            methods: {
+                selectCard(index) {
+                    this.selectedCardIndex = index;
+                },
+                playCard() {
+                    if (this.selectedCardIndex !== null) {
+                        const selectedCard = this.cards[this.selectedCardIndex];
+                        this.message = '你打出了' + selectedCard.name;
+                        this.discardedCards.push(selectedCard);
+                        this.cards.splice(this.selectedCardIndex, 1);
+                        this.selectedCardIndex = null;
+                    } else {
+                        this.message = '请先选择一张牌！';
+                    }
+                },
+                drawCard() {
+                    if (this.deck.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * this.deck.length);
+                        const drawnCard = this.deck.splice(randomIndex, 1)[0];
+                        this.cards.push(drawnCard);
+                        this.message = '你摸到了一张牌：' + drawnCard.name;
+                    } else {
+                        this.message = '牌堆已经没有牌了！';
+                    }
+                },
+                initializeDeck() {
+                    this.deck = this.cards.slice();
+                    for (let i = this.deck.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+                    }
+                },
+                initialDraw() {
+                    for (let i = 0; i < this.handSize; i++) {
+                        this.drawCard();
+                    }
+                }
+            },
+            mounted() {
+                this.initializeDeck();
+                this.initialDraw();
+            }
+        };
+
+        Vue.createApp(App).mount('#app');
+    </script>
+</body>
+</html>
