@@ -30,6 +30,19 @@
             -ms-user-select: none;
             color: black;
         }
+         /* on medium screens, make cards take up half of the width */
+        @media (min-width: 600px) {
+            .card, .discarded-card {
+                width: calc(50% - 20px);  /* subtract margins */
+            }
+        }
+
+        /* on large screens, make cards take up a quarter of the width */
+        @media (min-width: 900px) {
+            .card, .discarded-card {
+                width: calc(25% - 20px);  /* subtract margins */
+            }
+        }
 
         .card-enlarged {
             transform: scale(1.2);
