@@ -6,33 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
-        .card-container {
-        display: flex;
-        flex-flow: row wrap; /* ensure cards wrap to next line when row is full */
-        justify-content: center; /* center cards horizontally */
-        align-items: center; /* center cards vertically */
+    .card-container {
+        white-space: nowrap;  /* prevent line breaks in container */
+        overflow-x: auto;  /* enable horizontal scrolling */
+        padding: 10px;
     }
 
     .card, .discarded-card {
+        display: inline-block;  /* place cards in line */
+        vertical-align: top;  /* align cards to the top */
         border: 1px solid black;
         border-radius: 15px;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        width: 200px; /* fixed width */
+        width: 200px;  /* fixed width */
         height: 300px;
         margin: 10px;
         padding: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         transition: transform 0.2s;
         user-select: none;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         color: black;
-    }
 
+        text-align: center;  /* center text */
+        white-space: normal;  /* allow text to wrap */
+    }
         
 
         .card-enlarged {
