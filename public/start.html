@@ -101,7 +101,7 @@
                     selectedCardIndex: null,
                     discardedCards: [],
                     message: '',
-                    cards: [
+                    allCards: [
                         { name: "刀", description: "", enlarged: false },
                         { name: "逃", description: "", enlarged: false },
                         { name: "资源补给", description: "摸两张牌", enlarged: false },
@@ -119,12 +119,11 @@
                         { name: "Level Fun（玩得尽兴）", description: "进行判定，如果结果不为: ），则跳过摸牌阶段", enlarged: false },
                         { name: "抢资源", description: "拿走一名与你距离一的一个人的一张牌", enlarged: false },
                         { name: "战争", description: "由你选定的人开始，两人依次出“刀”，首位不出者扣一点血", enlarged: false },
-                        
                     ],
+                    cards: [],
                     deck: [],
                     handSize: 4,
                 };
-                //  { name: "", description: "", enlarged: false },
             },
             methods: {
                 selectCard(index) {
@@ -142,17 +141,17 @@
                     }
                 },
                 drawCard() {
-                    if (this.deck.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * this.deck.length);
-                        const drawnCard = this.deck.splice(randomIndex, 1)[0];
-                        this.cards.push(drawnCard);
-                        this.message = '你摸到了一张牌：' + drawnCard.name;
-                    } else {
-                        this.message = '牌堆已经没有牌了！';
+                    if (this.deck.length === 0) {
+                        this.initializeDeck();
                     }
+                    const randomIndex = Math.floor(Math.random() * this.deck.length);
+                    const drawnCard = this.deck.splice(randomIndex, 1)[0];
+                    this.cards.push(drawnCard);
+                    this.message = '你摸到了一张牌：' + drawnCard.name;
                 },
                 initializeDeck() {
-                    this.deck = this.cards.slice();
+                    this.cards = [];
+                    this.deck = this.allCards.slice();
                     for (let i = this.deck.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
