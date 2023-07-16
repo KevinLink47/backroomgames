@@ -4,45 +4,36 @@
     <title>后室杀</title>
     <script src="https://unpkg.com/vue@next"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <style>
         .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        display: flex;
+        flex-flow: row wrap; /* ensure cards wrap to next line when row is full */
+        justify-content: center; /* center cards horizontally */
+        align-items: center; /* center cards vertically */
+    }
 
-        .card, .discarded-card {
-            border: 1px solid black;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            width: 200px;
-            height: 300px;
-            margin: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            color: black;
-        }
-         /* on medium screens, make cards take up half of the width */
-        @media (min-width: 600px) {
-            .card, .discarded-card {
-                width: calc(50% - 20px);  /* subtract margins */
-            }
-        }
+    .card, .discarded-card {
+        border: 1px solid black;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        width: 200px; /* fixed width */
+        height: 300px;
+        margin: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.2s;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        color: black;
+    }
 
-        /* on large screens, make cards take up a quarter of the width */
-        @media (min-width: 900px) {
-            .card, .discarded-card {
-                width: calc(25% - 20px);  /* subtract margins */
-            }
-        }
+        
 
         .card-enlarged {
             transform: scale(1.2);
@@ -155,14 +146,14 @@
                     }
                 },
                 drawCard() {
-                    if (this.deck.length === 0) {
-                        this.initializeDeck();
-                    }
-                    const randomIndex = Math.floor(Math.random() * this.deck.length);
-                    const drawnCard = this.deck.splice(randomIndex, 1)[0];
-                    this.cards.push(drawnCard);
-                    this.message = '你摸到了一张牌：' + drawnCard.name;
-                },
+                    for (let i = 0; i < 2; i++) { // draw two cards
+                        if (this.deck.length === 0) {
+                            this.initializeDeck();
+                        }
+                        const randomIndex = Math.floor(Math.random() * this.deck.length);
+                        const drawnCard = this.deck.splice(randomIndex, 1)[0];
+                        this.cards.push(drawnCard);
+                    }},
                 initializeDeck() {
                     this.cards = [];
                     this.deck = this.allCards.slice();
